@@ -1,0 +1,16 @@
+<!ELEMENT catalog (bookList, bookCategory)>
+<!ELEMENT bookList (book*, ebook*, newBook*)>
+<!ENTITY % bookInfo (title, author+)>
+
+<!ELEMENT book (title, author+, publisher, pubDate, price+, revisionDate*)>
+<!ATTLIST book id ID #REQUIRED
+				categories IDREFS #IMPLIED >
+<!ELEMENT title (#PCDATA)>
+<!ELEMENT author (#PCDATA)>
+<!ELEMENT publisher (#PCDATA)>
+<!ELEMENT pubDate EMPTY>
+<!ATTLIST pubDate month (01|02|03|04) #REQUIRED>
+<!ELEMENT revisionDate (#PCDATA)>
+<!ELEMENT price (#PCDATA)>
+
+<!ELEMENT bookCategory EMPTY>
