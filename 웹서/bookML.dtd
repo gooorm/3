@@ -1,16 +1,61 @@
-<!ELEMENT catalog (bookList, bookCategory)>
-<!ELEMENT bookList (book*, ebook*, newBook*)>
-<!ENTITY % bookInfo (title, author+)>
+<!ELEMENT catalog (bookList, bookCategory)> <!--R1 도서들의 목록, 도서 분류 체계-->
+<!ELEMENT bookList (book*, eBook*, newEBook*)> 
 
-<!ELEMENT book (title, author+, publisher, pubDate, price+, revisionDate*)>
-<!ATTLIST book id ID #REQUIRED
+<!--R2 제목, 저자, 출판사, 출판일, 가격, 할인율, 페이지수, 평점, 분야, 개정일, 표지그림, 책소개, 독자리뷰를 내부 parameter entity로 정의함. -->
+<!ENTITY % bookinfo "(title, author+, publisher?, pubDate, revisionDate*, price, pages, rating, description?, review*, originalTitle?, translator?)">
+
+<!ELEMENT book %bookinfo;>
+<!ELEMENT eBook (%bookinfo;, format, size, period?)> <!--R9 전자책은 파일형식과 파일크기, 이용기간 추가. 이용기간(term)은 생략 가능-->
+<!ELEMENT newEBook (title, originalTitle?, author*, publisher?, pubDate, price?, pages?, rating?, format, size, period?, description?, review*, translator?)> 
+<!--R11 새로 나온 신간 전자책엔 개정일을 포함하지 않음-->
+<!ATTLIST book id ID #REQUIRED 
+				categories IDREFS #IMPLIED ><!-- R3: 도서의 식별자 bid--> 
+<!ATTLIST eBook id ID #REQUIRED
 				categories IDREFS #IMPLIED >
+<!ATTLIST newEBook id ID #REQUIRED
+				categories IDREFS #IMPLIED >
+<!--R7 도서가 속한 분야 정보는 도서 분류 체계에 존재하는 분야만 이용 가능함.-->
 <!ELEMENT title (#PCDATA)>
+<!ENTITY title "제목"> <!--내부 일반 parsed entity-->
 <!ELEMENT author (#PCDATA)>
 <!ELEMENT publisher (#PCDATA)>
 <!ELEMENT pubDate EMPTY>
-<!ATTLIST pubDate month (01|02|03|04) #REQUIRED>
+<!--R4: 연, 월, 일 구성 -->
+<!ATTLIST pubDate year CDATA #REQUIRED>
+<!ATTLIST pubDate month (01|02|03|04|05|06|07|08|09|10|11|12) #REQUIRED>
+<!ATTLIST pubDate day CDATA #REQUIRED>
 <!ELEMENT revisionDate (#PCDATA)>
-<!ELEMENT price (#PCDATA)>
+<!ATTLIST revisionDate year CDATA #REQUIRED>
+<!ATTLIST revisionDate month (01|02|03|04|05|06|07|08|09|10|11|12) #REQUIRED>
+<!ATTLIST revisionDate day CDATA #REQUIRED>
 
-<!ELEMENT bookCategory EMPTY>
+<!ELEMENT price (listPrice, salesPrice)><!--R5: 정가, 판매가 구분 -->
+<!ATTLIST price salerate CDATA #IMPLIED>
+<!ATTLIST price currency (won | 엔 | 달러) #IMPLIED><!--R5: 원, 엔, 달러 구분 + 생략 가능-->
+<!ELEMENT listPrice (#PCDATA)>
+<!ELEMENT salesPrice (#PCDATA)>
+<!ATTLIST salesPrice discountRate CDATA #REQUIRED>
+
+<!ELEMENT pages (#PCDATA)> <!--R6 페이지수-->
+
+<!ELEMENT rating (#PCDATA)> <!--R6 평점 실수값-->
+
+<!ELEMENT description (#PCDATA)>
+
+<!ELEMENT bookCategory (category+)>
+<!ELEMENT category (category*)>
+<!ATTLIST category cid ID #REQUIRED
+					name CDATA #REQUIRED>
+<!ELEMENT format EMPTY>
+<!ATTLIST format value (EPUB | PDF | StreamText | StreamImage) #REQUIRED>
+<!--R10 전자책의 파일 형식 EPUB, PDF, StreamText, StreamImage 중 하나-->
+
+<!ELEMENT size (#PCDATA)>
+<!ATTLIST size unit (KB | MB | GB | B) #REQUIRED>
+<!--R10 전자책의 파일 크기의 단위-->
+<!ELEMENT period (#PCDATA)>
+<!--R10 이용기간은 일수로 정의됨.-->
+<!ELEMENT review (#PCDATA)>
+
+<!ELEMENT originalTitle (#PCDATA)>
+<!ELEMENT translator (#PCDATA)>
