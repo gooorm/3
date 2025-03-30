@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/bookML" xmlns:tns="http://www.example.org/bookML" elementFormDefault="qualified">
+<!--  -->
+
+
+
+    <element name="catalog" type="string"></element>
+
+    <simpleType name="ISBN10">
+    	<restriction base="string">
+    		<pattern value="\d{9}-\d"></pattern>
+    	</restriction>
+    </simpleType>
+
+    <simpleType name="ISBN13">
+    	<restriction base="string">
+    		<pattern value="(978|979)-\d{9}-\d"></pattern>
+    	</restriction>
+    </simpleType>
+
+    <simpleType name="discountRate">
+    	<restriction base="integer">
+    		<maxInclusive value="80"></maxInclusive><!-- R5: 할인율은 0 이상 80 이하의 값 -->
+    		<minInclusive value="0"></minInclusive>
+    	</restriction>
+    </simpleType>
+
+    <simpleType name="pages"><!--R6 페이지수는 1 이상 2000 이하의 값을 갖는다  -->
+    	<restriction base="integer">
+    		<minInclusive value="1"></minInclusive>
+    		<maxExclusive value="2000"></maxExclusive>
+    	</restriction>
+    </simpleType>
+
+    <element name="bookList" type="string"></element>
+
+    <simpleType name="rating">
+    	<restriction base="double"><!--R6 평점은 1~5 사이의 실수 값을 갖는다. -->
+    		<minInclusive value="1"></minInclusive>
+    		<maxInclusive value="5"></maxInclusive>
+    	</restriction>
+    </simpleType>
+
+    <complexType name="price">
+    	<sequence>
+    		<element name="listPrice">
+    			<simpleType>
+    				<restriction base="double">
+    					<minExclusive value="0"></minExclusive>
+    				</restriction>
+    			</simpleType>
+    		</element>
+    		<element name="salesPrice">
+    			<simpleType>
+    				<restriction base="double">
+    					<minExclusive value="0"></minExclusive>
+    				</restriction>
+    			</simpleType>
+    		</element>
+    	</sequence>
+    	<attribute name="currency">
+    		<simpleType>
+    			<restriction base="string">
+    				<pattern value="(won|dollar|yen).?"></pattern>
+    				<!-- R5 가격은 원, 달러, 엔으로 표시 + .? : 생략 가능 -->
+    			</restriction>
+    		</simpleType>
+    	</attribute>
+    	<attribute name="rate" type="tns:discountRate"></attribute>
+    </complexType>
+
+    <complexType name="cover"></complexType>
+
+    <complexType name="fileType">
+    	<attribute name="type">
+    		<simpleType>
+    			<restriction base="string">
+    				<pattern
+    					value="(EPUB|PDF|Stream Text|StreamImage)">
+    				</pattern>
+    			</restriction>
+    		</simpleType>
+    	</attribute>
+    	<attribute name="unit">
+    		<simpleType>
+    			<restriction base="string">
+    				<pattern value="(B|KB|MB|GB)"></pattern>
+    			</restriction>
+    		</simpleType>
+    	</attribute>
+    	<attribute name="size">
+    		<simpleType>
+    			<restriction base="double">
+    				<minInclusive value="0"></minInclusive>
+    			</restriction>
+    		</simpleType>
+    	</attribute>
+    </complexType>
+
+    <complexType name="size"></complexType>
+
+    <attribute name="NewAttribute" type="string"></attribute>
+
+
+    <simpleType name="discount">
+    	<restriction base="string"></restriction>
+    </simpleType>
+</schema>
